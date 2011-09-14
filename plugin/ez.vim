@@ -47,9 +47,9 @@ autocmd BufNewFile,BufRead *.tpl call EzTplEnvironment()
 command! -nargs=1 -bar Ezcv call Ezcv('<args>')
 abbreviate cv Ezcv
 
-let py_file = findfile("ez.py")
-if !empty(py_file)
-    execute 'pyf' py_file
+let s:py_file=expand('<sfile>:p:h').'/ez.py'
+if !empty(s:py_file)
+    execute 'pyf' s:py_file
 endif
 function! Ezcv(siteurl)
     let winnum = bufwinnr(g:EzSideBarName)
