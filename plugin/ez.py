@@ -1,4 +1,5 @@
 # This file is part of ezvim.
+# ex: set ts=4 sw=4:
 #
 # Authors :
 #   Damien Pobel <dpobel@free.fr>
@@ -19,6 +20,7 @@
 
 import urllib
 import urllib2
+import re
 import vim
 import xml.dom.minidom
 
@@ -62,6 +64,35 @@ def eZClassesView(ezsite):
             eZDoCommandRange(group_start_line, group_end_line, 'foldopen')
     curbuf.append('')
 
+def eZTemplateVariablesUsed(content):
+	pattern = '\{[^$]*?(\$[a-z0-9_-]+)(?:\.\|)?[^}]*\}'
+	m = re.findall(pattern, content)
+	m.sort()
+	return list(set(m))
+
+def eZTemplateVariablesPrinted(content):
+	pattern = '\{(\$[a-z0-9_-]+)(?:\.\|)?[^}]*\}'
+	m = re.findall(pattern, content)
+	m.sort()
+	return list(set(m))
+
+def eZTemplateVariablesControlStructures(content):
+	pattern = '\{(if|foreach)\s+(?:[^$]*)?(\$[a-z0-9_-]+)(?:\.\|)?[^}]*\}'
+	m = re.findall(pattern, content)
+	m.sort()
+	return list(set(m))
+
+def eZTemplateVariables():
+	content = '\n'.join(vim.current.buffer[:])
+	used = eZTemplateVariablesUsed(content)
+	#used = eZTemplateVariablesControlStructures(content)
+	vim.command("exe 'silent! topleft vertical 40 split +0ma Variables'")
+	buf = vim.current.buffer
+	buf[:] = None
+	buf[0] = 'Variables in use in template'
+	for l in used:
+		buf.append(l)
+	vim.command('set nomodified')
 
 # Format the line for a Classes Group
 def eZClassesGroupText(group, class_list):

@@ -24,6 +24,10 @@ runtime! syntax/html.vim
 set isk+=-
 set isk+=$
 
+set sw=4
+set ts=4
+set expandtab
+
 syn keyword ezpTagName include
 syn keyword ezpTagName attribute_edit_gui
 syn keyword ezpTagName attribute_pdf_gui

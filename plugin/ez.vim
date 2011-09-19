@@ -46,11 +46,16 @@ autocmd BufNewFile,BufRead *.tpl call EzTplEnvironment()
 " Classes View
 command! -nargs=1 -bar Ezcv call Ezcv('<args>')
 abbreviate cv Ezcv
+command! -bar Ezv call Ezv()
+abbreviate ezv Ezv
 
 let s:py_file=expand('<sfile>:p:h').'/ez.py'
 if !empty(s:py_file)
     execute 'pyf' s:py_file
 endif
+function! Ezv()
+    exec 'py eZTemplateVariables()'
+endfunction
 function! Ezcv(siteurl)
     let winnum = bufwinnr(g:EzSideBarName)
     let python_func = 'py eZClassesView("'.a:siteurl.'")'
